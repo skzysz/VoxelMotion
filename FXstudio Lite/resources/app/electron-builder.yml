@@ -1,0 +1,33 @@
+appId: app.blockfx.lite.desktop
+productName: VoxelMotion
+electronDist: node_modules/electron/dist
+asar: true
+npmRebuild: false
+directories:
+  output: dist
+files:
+  - main.js
+  - preload.js
+  - recovery-store.cjs
+  - voxelmotion-icon.png
+  - www/**/*
+  - package.json
+win:
+  icon: voxelmotion-icon.png
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+nsis:
+  artifactName: VoxelMotion-${version}-Setup.${ext}
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  deleteAppDataOnUninstall: false
+  runAfterFinish: false
+  installerLanguages: [ru_RU, en_US]
+portable:
+  artifactName: VoxelMotion-${version}-Portable.${ext}

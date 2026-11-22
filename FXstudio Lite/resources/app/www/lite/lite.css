@@ -1,0 +1,4 @@
+/* FXstudio Lite: hide leftover PRO lock chrome. Effects stay in the normal catalog. */
+.lite-pro-section{display:none!important}
+.lite-lock-image,.lite-badge,.lite-art-shade,.fx-add-premium{display:none!important}
+.lite-unlock-help{font-size:12px;line-height:1.45;color:var(--mut)}

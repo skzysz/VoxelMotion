@@ -1,0 +1,14 @@
+{
+  "weather.rain": {
+    "path": "rain",
+    "local": "sounds/rain/rain.ogg",
+    "size": 293167,
+    "duration": 30
+  },
+  "weather.rain.above": {
+    "path": "rain-above",
+    "local": "sounds/rain/rain-above.ogg",
+    "size": 247362,
+    "duration": 30
+  }
+}

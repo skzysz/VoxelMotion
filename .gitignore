@@ -1,0 +1,17 @@
+# Isolated Electron verification profile.
+.qa-profile/
+.qa-recovery-profile/
+tmp/
+node_modules/
+dist/
+*.log
+.env
+.env.*
+!.env.example
+**/docs/ru/screenshots/**/electron.log
+**/docs/ru/screenshots/**/exports/
+**/docs/ru/screenshots/**/*.mp4
+**/docs/ru/screenshots/**/*.webm
+**/docs/ru/screenshots/**/*.gif
+**/docs/ru/screenshots/**/*.zip
+**/docs/ru/screenshots/**/*.json
