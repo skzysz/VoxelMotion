@@ -41,7 +41,9 @@
           presets.exports.push({...structuredClone(st),id:u.uid(),name:name.slice(0,80),wide:P.isWide(project)});
           if(persist()){row.remove();refresh();UI.toast('Пресет экспорта сохранён');}
         },'ghost sm','plus'),UI.btn('Мои пресеты',()=>manageExports(),'ghost sm','gear')),
-        h('p',{class:'f-hint'},'Видео экспортируется без звука. Для звуков используйте отдельные OGG-файлы из базы и добавьте их в видеоредакторе.'));
+        h('p',{class:'f-hint'},project._effectSound?.enabled?
+          (['mp4','webm'].includes(st.format)?'Со звуком: '+project._effectSound.name:'Этот формат сохраняется без звука. Для звука выберите MP4 или WebM.'):
+          'Звук можно выбрать в редакторе эффекта. MP4 и WebM поддерживают экспорт со звуком.'));
       sheet.body.prepend(row);
     };
     const observer=new MutationObserver(refresh);observer.observe(sheet.body,{childList:true});

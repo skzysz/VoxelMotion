@@ -265,5 +265,5 @@
     else if (result.damaged && !draft) warning = 'Не удалось прочитать черновик. Существующие файлы сохранены.';
     renderBanners();
   }).catch(() => { warning = 'Не удалось прочитать черновик. Проверьте доступ к папке профиля.'; renderBanners(); });
-  BFX.autosave = { save: () => save(active, true), restore, get current() { return active?.project; } };
+  BFX.autosave = { save: () => save(active, true), flush: () => flushSync(), restore, get current() { return active?.project; } };
 })();

@@ -17,7 +17,7 @@ async function main(){
       BFX.store.set('fxLibraryTab','all');BFX.ui.go('fx');
       return {title:document.title,brand:document.querySelector('.pc-logo')?.textContent||'',version:BFX.APPVER,apiName:window.fxstudio.getAppName(),exportName:BFX.EX.fname('Example','png'),effects:BFX.FX.list.length};
     })()`);
-    assert.equal(state.title,'VoxelMotion');assert.equal(state.apiName,'VoxelMotion');assert.equal(state.version,'2.12.1');
+    assert.equal(state.title,'VoxelMotion');assert.equal(state.apiName,'VoxelMotion');assert.equal(state.version,require('./package.json').version);
     assert(state.brand.includes('VoxelMotion'));assert(state.exportName.startsWith('VoxelMotion_'));assert.equal(state.effects,188);
     await qa.wait(1500);const image=await c.call('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(output,'catalog.png'),Buffer.from(image.data,'base64'));
     assert.deepEqual(qa.rendererErrors,[]);fs.writeFileSync(path.join(output,'verification.json'),JSON.stringify(state,null,2));console.log(JSON.stringify(state,null,2));

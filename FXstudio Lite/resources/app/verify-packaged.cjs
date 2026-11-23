@@ -15,10 +15,15 @@ async function main(){
       const s=BFX.ui.stack.at(-1);s._historyPreview.pl.pause();s._historyProject.layers[0].dur=s._historyProject.dur=1.25;
       const saved=await BFX.autosave.save();
       const result=await BFX.EX.run(s._historyProject,{format:'png',res:540,bg:'none',t:.5});
-      return {version:BFX.APPVER,count,hasCatalog:!!BFX.catalog,hasPresets:!!BFX.presets,saved,pngBytes:result.size};
+      const blob=await(await fetch('sounds/extra/pop.ogg')).blob();s._historyProject._effectSound=await BFX.EffectSound.store(blob,'Хлопок.ogg','packaged-pop');
+      s._historyProject.dur=s._historyProject.layers[0].dur=.5;
+      const audio=await BFX.EX.run(s._historyProject,{format:'mp4',res:540,bg:'black',fps:24});
+      const update=await window.FXDesktopAPI.updateState();
+      return {version:BFX.APPVER,count,hasCatalog:!!BFX.catalog,hasPresets:!!BFX.presets,saved,pngBytes:result.size,soundBytes:audio.size,hasAudio:audio.hasAudio,codec:audio.codec,updateMode:update.mode};
     })()`);
     assert(state.count>=188&&state.hasCatalog&&state.hasPresets&&state.saved&&state.pngBytes>1000);
-    assert.equal(state.version,'2.12.1');
+    assert.equal(state.version,require('./package.json').version);
+    assert(state.hasAudio&&state.soundBytes>1000);
     await qa.wait(700);const image=await c.call('Page.captureScreenshot',{format:'png'});
     const label=path.basename(executable).includes('Portable')?'portable':'standalone';
     fs.writeFileSync(path.join(output,label+'.png'),Buffer.from(image.data,'base64'));

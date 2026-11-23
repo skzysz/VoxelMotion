@@ -1,8 +1,8 @@
 {
   "name": "voxelmotion-desktop",
   "productName": "VoxelMotion",
-  "version": "2.12.1",
-  "description": "VoxelMotion для Windows. Редактор эффектов и анимации Minecraft.",
+  "version": "2.13.0",
+  "description": "VoxelMotion для Windows. Каталог эффектов Minecraft со звуком.",
   "main": "main.js",
   "private": true,
   "author": "VoxelMotion contributors",
@@ -11,12 +11,18 @@
     "verify:recovery": "node verify-recovery.cjs",
     "verify:export": "node verify-export.cjs",
     "verify:workspace": "node verify-workspace.cjs",
+    "verify:sound-updates": "node verify-sound-updates.cjs",
+    "verify:update-download": "electron verify-update-download.cjs",
     "dist": "electron-builder --win --publish never",
     "start": "electron .",
     "dev": "electron . --dev"
   },
   "devDependencies": {
     "electron": "^45.4.1",
-    "electron-builder": "^26.18.0"
+    "electron-builder": "^26.18.0",
+    "ffmpeg-static": "^5.3.0"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
   }
 }

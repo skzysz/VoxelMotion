@@ -24,7 +24,7 @@ git status --short
 Создайте первый коммит:
 
 ```powershell
-git commit -m 'Initial VoxelMotion 2.12.1'
+git commit -m 'Initial VoxelMotion 2.13.0'
 ```
 
 Если Git попросит имя и email, задайте их для этого репозитория и повторите коммит:
@@ -32,7 +32,7 @@ git commit -m 'Initial VoxelMotion 2.12.1'
 ```powershell
 git config user.name 'YOUR_NAME'
 git config user.email 'YOUR_GITHUB_EMAIL_OR_NOREPLY'
-git commit -m 'Initial VoxelMotion 2.12.1'
+git commit -m 'Initial VoxelMotion 2.13.0'
 ```
 
 Замените значения на свои. Git установлен в текущей системе; GitHub CLI для этих команд не нужен.
@@ -54,19 +54,23 @@ git push -u origin main
 
 В репозитории откройте **Releases → Draft a new release**:
 
-1. Создайте тег `v2.12.1` для ветки `main`.
-2. Название релиза: `VoxelMotion 2.12.1`.
+1. Создайте тег `v2.13.0` для ветки `main`.
+2. Название релиза: `VoxelMotion 2.13.0`.
 3. Прикрепите файлы из `FXstudio Lite/resources/app/dist/`:
-   - `VoxelMotion-2.12.1-Setup.exe`;
-   - `VoxelMotion-2.12.1-Portable.exe`;
-   - `VoxelMotion-2.12.1-SHA256SUMS.txt`, если хотите приложить контрольные суммы.
+   - `VoxelMotion-2.13.0-Setup.exe`;
+   - `VoxelMotion-2.13.0-Portable.exe`;
+   - `VoxelMotion-2.13.0-SHA256SUMS.txt`, если хотите приложить контрольные суммы.
+   - `latest.yml` — обязателен для обновлений установленной программы;
+   - `VoxelMotion-2.13.0-Setup.exe.blockmap` — файл штатного механизма обновлений.
 4. Добавьте описание и нажмите **Publish release**.
 
 EXE не добавляйте через `git add`: GitHub блокирует файлы больше 100 MiB в обычном Git, а эти сборки превышают лимит. Для распространения готовых программ используется Releases. Источники: [лимиты файлов](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github), [создание релиза](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
+`latest.yml` и `.blockmap` генерируются сборкой. Не редактируйте в них версию, имя установщика или контрольные суммы вручную. Тег релиза и версия установщика должны совпадать. Для первого перехода с 2.12.1 пользователи устанавливают новый Setup вручную; следующие версии получают обновления через приложение.
+
 Пример описания релиза:
 
-> VoxelMotion 2.12.1 — новое название редактора эффектов Minecraft. 188 эффектов, автосохранение и восстановление, личные подборки, инструменты слоёв и пресеты экспорта. Windows x64. Portable запускается без установки и Node.js. Экспорт видео — без звука. Установщик и EXE не имеют цифровой подписи издателя.
+> VoxelMotion 2.13.0 — новое название редактора эффектов Minecraft. 188 эффектов, автосохранение и восстановление, личные подборки, инструменты слоёв и пресеты экспорта. Windows x64. Portable запускается без установки и Node.js. Экспорт видео — без звука. Установщик и EXE не имеют цифровой подписи издателя.
 
 ## 5. Следующие обновления
 

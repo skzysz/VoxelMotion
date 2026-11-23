@@ -9451,8 +9451,9 @@ EX.run=async(pr,o,onProg=()=>{},signal={aborted:false})=>{
   if(o.format==='png') return exportPng(pr,o,bg,name,signal);
   if(o.format==='gif') return exportGif(pr,o,bg,dur,name,onProg,signal);
   if(o.format==='zip') return exportZip(pr,o,bg,dur,name,onProg,signal);
-  if(o.format==='webm') return exportWebm(pr,o,bg,dur,name,onProg,signal);
-  return exportMp4(pr,o,bg,dur,name,onProg,signal);
+  const videoProgress=pr._effectSound?.enabled?p=>onProg({...p,k:Math.min(.94,(p.k||0)*.94)}):onProg;
+  const result=o.format==='webm'?await exportWebm(pr,o,bg,dur,name,videoProgress,signal):await exportMp4(pr,o,bg,dur,name,videoProgress,signal);
+  return BFX.EffectSound?BFX.EffectSound.attach(result,pr,o,onProg,signal):result;
 };
 function progress(onProg,i,N,t0,msg){ const el=(performance.now()-t0)/1000, k=i/N; const eta=k>0.02?el/k*(1-k):null; onProg({phase:'render',k,i,N,eta,msg}); }
 async function exportPng(pr,o,bg,name,signal){ const [W,H]=EX.size(o.res||1080,pr); const c=u.canvas(W,H), x=c.getContext('2d'); await frameAt(x,pr,o.t||0,bg); if(signal.aborted) throw abortErr();
@@ -19159,7 +19160,7 @@ body[data-palette]:not([data-palette="ocean"]) .rec{background:var(--ui-action);
     input.addEventListener('input',u.debounce(filter,110));
   }
 
-  BFX.SoundLibrary={mount,stop:()=>stopAudio()};
+  BFX.SoundLibrary={mount,stop:()=>stopAudio(),catalog,load:sound};
 })();
 </script>
 <script>
@@ -19704,7 +19705,7 @@ body[data-palette]:not([data-palette="ocean"]) .rec{background:var(--ui-action);
 'use strict';
 (() => {
   const projects=new WeakMap();
-  const fields=['name','w','h','fps','dur','bg','scene','layers'];
+  const fields=['name','w','h','fps','dur','bg','scene','layers','_effectSound'];
 
   function attach(project) {
     if(projects.has(project))return projects.get(project);
@@ -27556,9 +27557,11 @@ Object.assign(BFX.RELEASE,{version:'2.11.25',code:120,changes:[
 <link rel="stylesheet" href="lite/lite.css">
 <script src="lite/lite-gate.js"></script>
 <script id="fxstudio-lite-release-21122">
-(()=>{'use strict';const version='2.12.1';
+(()=>{'use strict';const version='2.13.0';
  BFX.APPVER=version;
- Object.assign(BFX.RELEASE,{version,code:121,changes:[
+ Object.assign(BFX.RELEASE,{version,code:122,changes:[
+ ['Звук эффекта','Короткие звуки, каталог Minecraft и свои файлы. Громкость, задержка, повтор, прослушивание и экспорт MP4/WebM со звуком.'],
+ ['Обновления','Проверка GitHub Releases при запуске и в настройках. Установленная версия скачивает обновление в фоне; перезапуск — по кнопке после сохранения.'],
  ['Автосохранение','Черновик редактора, восстановление после закрытия и резервная копия. Ctrl+S сохраняет текущую работу.'],
  ['Каталог','Недавние эффекты, личные подборки, поиск по тегам и живой предпросмотр карточек.'],
  ['Редактор','Копии слоёв, точные координаты, выравнивание, сетка композиции и история действий.'],
@@ -27693,4 +27696,7 @@ body.fx-desktop .pc-preview .pc-preview-scale :is(.pc-scale-step, .pc-scale-fit)
 <script src="desktop/catalog.js"></script>
 <script src="desktop/editor-tools.js"></script>
 <script src="desktop/export-tools.js"></script>
+<link rel="stylesheet" href="desktop/sound-updates.css">
+<script src="desktop/effect-sound.js"></script>
+<script src="desktop/updates.js"></script>
 </body></html>

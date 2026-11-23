@@ -3,6 +3,22 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 // Names consumed by the desktop workspace in index.html.
 contextBridge.exposeInMainWorld('FXDesktopAPI', {
+  updateState: () => ipcRenderer.invoke('desktop:update-state'),
+  checkUpdates: () => ipcRenderer.invoke('desktop:update-check'),
+  downloadUpdate: () => ipcRenderer.invoke('desktop:update-download'),
+  installUpdate: () => ipcRenderer.invoke('desktop:update-install'),
+  openUpdateRelease: () => ipcRenderer.invoke('desktop:update-release'),
+  setAutoUpdates: enabled => ipcRenderer.invoke('desktop:update-auto', enabled),
+  mixEffectAudio: job => ipcRenderer.invoke('desktop:audio-mix', job),
+  cancelEffectAudio: id => ipcRenderer.invoke('desktop:audio-cancel', id),
+  onAudioProgress: callback => {
+    const listener=(_event,data)=>callback(data);ipcRenderer.on('desktop:audio-progress',listener);
+    return ()=>ipcRenderer.removeListener('desktop:audio-progress',listener);
+  },
+  onUpdateState: callback => {
+    const listener=(_event,data)=>callback(data);ipcRenderer.on('desktop:update-state',listener);
+    return ()=>ipcRenderer.removeListener('desktop:update-state',listener);
+  },
   recoveryLoad: () => ipcRenderer.invoke('desktop:recovery-load'),
   recoverySave: record => ipcRenderer.invoke('desktop:recovery-save', record),
   recoveryClear: () => ipcRenderer.invoke('desktop:recovery-clear'),

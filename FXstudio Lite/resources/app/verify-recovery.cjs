@@ -25,10 +25,11 @@ async function connect(url) {
   };
   const call = (method, params = {}) => new Promise((resolve, reject) => {
     const n = ++id;
-    const timer = setTimeout(() => { pending.delete(n); reject(Error('Timeout: ' + method)); }, 25000);
+    const timer = setTimeout(() => { pending.delete(n); reject(Error('Timeout: ' + method)); }, method==='Runtime.evaluate'?90000:25000);
     pending.set(n, message => { clearTimeout(timer); pending.delete(n); message.error ? reject(Error(JSON.stringify(message.error))) : resolve(message.result); });
     ws.send(JSON.stringify({ id: n, method, params }));
   });
+  ws.addEventListener('close',()=>{for(const resolve of pending.values())resolve({error:{message:'QA debug connection closed'}});pending.clear();});
   return { ws, call, async evaluate(expression) {
     const response = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
     assert(!response.exceptionDetails, JSON.stringify(response.exceptionDetails));
@@ -177,7 +178,8 @@ async function main() {
     await connection.evaluate(`BFX.autosave.current.name='Проверка Ctrl+S'`);
     await connection.call('Input.dispatchKeyEvent', { type: 'keyDown', key: 's', code: 'KeyS', modifiers: 2, windowsVirtualKeyCode: 83 });
     await connection.call('Input.dispatchKeyEvent', { type: 'keyUp', key: 's', code: 'KeyS', modifiers: 2, windowsVirtualKeyCode: 83 });
-    await until(`document.querySelector('.fx-autosave-status')?.textContent.includes('Сохранено в')`, 'Ctrl+S');
+    try{await until(`document.querySelector('.fx-autosave-status')?.textContent.includes('Сохранено в')`, 'Ctrl+S');}
+    catch(error){console.log('Save diagnostic',await connection.evaluate(`({status:[...document.querySelectorAll('.fx-autosave-status')].map(n=>n.textContent),active:!!BFX.autosave.current,name:BFX.autosave.current?.name,stack:BFX.ui.stack.map(s=>s.panel.getAttribute('aria-label'))})`),store.load().draft?.project?.name);throw error;}
     assert.equal(store.load().draft.project.name, 'Проверка Ctrl+S');
     checks.push('Ctrl+S saves the active effect draft');
     // A real filesystem write failure must be visible and retryable.

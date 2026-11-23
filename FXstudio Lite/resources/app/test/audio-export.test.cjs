@@ -1,0 +1,5 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const {validateAudioJob,audioArguments}=require('../audio-export.cjs');
+function job(){return {id:'test-audio-123',video:new Uint8Array(32),audio:new Uint8Array(32),format:'mp4',duration:2,volume:.4,delay:.25,loop:false};}
+test('valid sound parameters map to a copied video and padded, delayed audio',()=>{const args=audioArguments(job(),'C:/test');assert(args.includes('copy'));assert(args.includes('aac'));assert(args.includes('volume=0.4,adelay=250:all=1,apad'));assert(!args.includes('-stream_loop'));});
+test('transparent WebM keeps its video stream and adds Opus',()=>{const args=audioArguments({...job(),format:'webm',loop:true},'C:/test');assert(args.includes('libopus'));assert(args.includes('copy'));assert(args.includes('-stream_loop'));});
+test('invalid ranges, formats and identifiers are rejected before launching a process',()=>{for(const change of [{volume:NaN},{volume:2},{delay:-1},{duration:Infinity},{format:'gif'},{id:'../../file'},{audio:new Uint8Array(2)},{loop:'yes'}])assert.throws(()=>validateAudioJob({...job(),...change}));});

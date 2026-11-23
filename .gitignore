@@ -15,3 +15,4 @@ dist/
 **/docs/ru/screenshots/**/*.gif
 **/docs/ru/screenshots/**/*.zip
 **/docs/ru/screenshots/**/*.json
+**/docs/ru/screenshots/**/*.wav

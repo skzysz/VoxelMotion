@@ -8,6 +8,8 @@ const { pathToFileURL } = require('node:url');
 const fs = require('node:fs');
 const path = require('node:path');
 const { RecoveryStore } = require('./recovery-store.cjs');
+const { AudioExporter } = require('./audio-export.cjs');
+const { UpdateService } = require('./update-service.cjs');
 
 app.setName('VoxelMotion');
 // Keep the existing profile across the rename; respect explicit QA/portable profiles.
@@ -28,6 +30,42 @@ let prefs = {};
 let prefsPath;
 let blocker;
 let recovery;
+let audioExporter;
+let updates;
+
+function notify(channel,value) {
+  if(win&&!win.isDestroyed()&&!win.webContents.isDestroyed())win.webContents.send(channel,value);
+}
+
+function configureUpdates() {
+  const installed=app.isPackaged&&!process.env.PORTABLE_EXECUTABLE_FILE&&
+    fs.existsSync(path.join(path.dirname(app.getPath('exe')),'Uninstall VoxelMotion.exe'));
+  const updater=installed?new (require('electron-updater').NsisUpdater)({provider:'github',owner:'skzysz',repo:'VoxelMotion'}):null;
+  updates=new UpdateService({version:app.getVersion(),mode:installed?'installed':app.isPackaged?'portable':'development',updater,
+    enabled:()=>prefs.autoUpdates!==false,onState:state=>notify('desktop:update-state',state),
+    fetchRelease:async()=>{
+      const response=await net.fetch('https://api.github.com/repos/skzysz/VoxelMotion/releases/latest',{
+        headers:{'User-Agent':'VoxelMotion/'+app.getVersion(),'Accept':'application/vnd.github+json'},signal:AbortSignal.timeout(20000)});
+      if(!response.ok)throw Error(response.status===403?'GitHub временно ограничил запросы. Повторите позже.':'GitHub: '+response.status);
+      return response.json();
+    }});
+  handle('desktop:update-state',()=>updates.state);
+  handle('desktop:update-check',()=>updates.check());
+  handle('desktop:update-download',()=>updates.download());
+  handle('desktop:update-auto',enabled=>{
+    if(typeof enabled!=='boolean')throw Error('Неверная настройка');
+    const previous=prefs.autoUpdates;prefs.autoUpdates=enabled;
+    try{savePrefs();}catch(error){prefs.autoUpdates=previous;throw error;}
+    return updates.set({});
+  });
+  handle('desktop:update-release',()=>shell.openExternal(updates.state.releaseUrl));
+  handle('desktop:update-install',()=>{
+    if(blocker!==undefined||audioExporter.busy)throw Error('Сначала дождитесь завершения экспорта.');
+    updates.install();
+  });
+  const initial=setTimeout(()=>{if(prefs.autoUpdates!==false)updates.check();},10000);initial.unref();
+  const periodic=setInterval(()=>{if(prefs.autoUpdates!==false)updates.check();},6*60*60*1000);periodic.unref();
+}
 
 function trustedSender(event) {
   return win && event.sender === win.webContents &&
@@ -87,6 +125,10 @@ function handle(channel, handler) {
 }
 
 function configureDesktopCommands() {
+  const binary=app.isPackaged?path.join(process.resourcesPath,'ffmpeg','ffmpeg.exe'):require('ffmpeg-static');
+  audioExporter=new AudioExporter({binary,folder:path.join(app.getPath('userData'),'temp','effect-audio'),onProgress:progress=>notify('desktop:audio-progress',progress)});
+  handle('desktop:audio-mix',job=>audioExporter.mix(job));
+  handle('desktop:audio-cancel',id=>typeof id==='string'&&audioExporter.cancel(id));
   recovery = new RecoveryStore(path.join(app.getPath('userData'), 'recovery'));
   handle('desktop:recovery-load', () => recovery.load());
   handle('desktop:recovery-save', record => recovery.save(record));
@@ -177,6 +219,7 @@ async function start() {
     callback({ responseHeaders: headers });
   });
   configureDesktopCommands();
+  configureUpdates();
   configureDownloads();
   const area = screen.getPrimaryDisplay().workAreaSize;
   const size = prefs.window || {};
@@ -201,7 +244,7 @@ async function start() {
     keepAwake(false);
   });
   win.on('closed', () => { win = undefined; });
-  win.webContents.on('render-process-gone', () => keepAwake(false));
+  win.webContents.on('render-process-gone', () => {keepAwake(false);audioExporter.cancelAll();});
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (/^https?:\/\//i.test(url)) shell.openExternal(url).catch(() => {});
     return { action: 'deny' };
@@ -225,4 +268,5 @@ else {
     app.quit();
   });
   app.on('window-all-closed', () => app.quit());
+  app.on('will-quit',()=>audioExporter?.cancelAll());
 }

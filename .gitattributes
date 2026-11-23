@@ -8,6 +8,9 @@
 *.gif binary
 *.ogg binary
 *.mp3 binary
+*.wav binary
+*.flac binary
+*.m4a binary
 *.ttf binary
 *.woff binary
 *.woff2 binary
