@@ -1,7 +1,7 @@
 {
   "name": "voxelmotion-desktop",
   "productName": "VoxelMotion",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "description": "VoxelMotion для Windows. Каталог эффектов Minecraft со звуком.",
   "main": "main.js",
   "private": true,

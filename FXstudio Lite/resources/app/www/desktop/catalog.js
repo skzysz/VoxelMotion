@@ -54,7 +54,7 @@
     let selected=store.get('fxLibraryTab','all'), query='';
     const search=h('input',{type:'search',class:'inp search',placeholder:'Название, тег или #категория…','aria-label':'Поиск эффектов и тегов'});
     const chips=h('div',{class:'chips scroll fx-library-tabs'}),list=h('div',{class:'fxlist'});
-    const title=h('div',{class:'fx-library-heading'},h('div',null,h('b',null,'Ваш каталог'),h('small',null,'Недавние эффекты, избранное и свои подборки')),
+    const title=h('div',{class:'fx-library-heading'},h('div',null,h('span',{class:'fx-library-eyebrow'},'VOXELMOTION / БИБЛИОТЕКА'),h('b',null,'Эффекты Minecraft'),h('small',null,'Найдите эффект, настройте его и сохраните со звуком')),
       UI.btn('Новая подборка',()=>createCollection(),'ghost sm','plus'));
     const available=()=>FX.list.filter(f=>!f.catalogHidden&&f.cat!=='fox');
     const select=key=>{selected=key;store.set('fxLibraryTab',key);render();};
@@ -78,7 +78,7 @@
         const text=query.replace(/#[^\s]+/g,'').trim();
         if(text)effects=BFX.SS.rank(effects,BFX.SS.query(text),BFX.SS.F.fx);
       }
-      const row=h('div',{class:'grp-h'},h('span',null,heading),h('small',null,effects.length));
+      const row=h('div',{class:'grp-h'},h('span',null,heading),h('small',{'aria-label':'Количество эффектов'},effects.length));
       if(selected.startsWith('collection:')){
         const group=data.collections.find(g=>g.id===selected.slice(11));
         row.append(UI.ib('more',()=>UI.menu([

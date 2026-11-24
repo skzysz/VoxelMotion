@@ -1,11 +1,11 @@
-# Быстрый старт · VoxelMotion 2.13.0
+# Быстрый старт · VoxelMotion 2.13.1
 
 ## Без PowerShell
 
 Откройте папку `FXstudio Lite/resources/app/dist` и запустите:
 
-- `VoxelMotion-2.13.0-Portable.exe` — сразу работать без установки.
-- `VoxelMotion-2.13.0-Setup.exe` — установить с ярлыком.
+- `VoxelMotion-2.13.1-Portable.exe` — сразу работать без установки.
+- `VoxelMotion-2.13.1-Setup.exe` — установить с ярлыком.
 
 Перед обновлением закройте старое окно. Node.js для этих EXE не нужен.
 

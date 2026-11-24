@@ -11,7 +11,10 @@
     if(!button){button=UI.btn('Обновления',open,'ghost sm fx-update-button','reset');top.insertBefore(button,top.lastElementChild);}
     const available=state&&['available','downloading','downloaded'].includes(state.status);
     button.classList.toggle('has-update',!!available);button.title=available?'Доступна версия '+state.version:'Обновления VoxelMotion';
-    button.querySelector('span').textContent=state?.status==='downloaded'?'Установить обновление':state?.status==='downloading'?'Скачивание '+(state.percent||0)+'%':'Обновления';
+    const label=state?.status==='downloaded'?'Установить обновление':state?.status==='downloading'?'Скачивание '+Math.round(state.percent||0)+'%':'Обновления';
+    button.querySelector('span:not(.ic)').textContent=label;
+    button.setAttribute('aria-label',label);button.setAttribute('aria-haspopup','dialog');
+    button.classList.toggle('is-checking',state?.status==='checking');
   }
   function render(panel){
     if(panel.closed){panels.delete(panel);return;}
@@ -38,7 +41,7 @@
         'Для Portable и запуска исходников доступна проверка версии. Новую версию скачайте со страницы релиза; установка из Setup поддерживает обновление внутри приложения.'),controls);
   }
   function update(next){state=next;header();for(const panel of panels)render(panel);}
-  function open(){const panel=UI.sheet({title:'Обновления VoxelMotion',cls:'fx-updates-sheet'});panels.add(panel);render(panel);return panel;}
+  function open(){for(const panel of panels){if(!panel.closed)return panel;panels.delete(panel);}const panel=UI.sheet({title:'Обновления VoxelMotion',cls:'fx-updates-sheet',onClose:()=>panels.delete(panel)});panels.add(panel);render(panel);return panel;}
   const mount=UI.mount;UI.mount=function(...args){const result=mount.apply(this,args);header();return result;};
   const settings=UI.settings;UI.settings=function(...args){const result=settings.apply(this,args),panel=result?.body?result:UI.stack.at(-1);if(panel?.body&&!panel.body.querySelector('.fx-update-settings')){
     const button=UI.btn('Обновления VoxelMotion',open,'ghost wide fx-update-settings','reset');panel.body.prepend(button);

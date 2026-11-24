@@ -4,6 +4,32 @@
 .fx-library-tile>.fx-collection-more{top:auto;bottom:58px}
 .fx-hover-preview{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:contain;background:#232a3b;pointer-events:none;z-index:1}
 .exp-done .media.fx-wide-result{width:min(100%,600px);aspect-ratio:16/9}
+/* Catalogue presentation stays separate from effect preview controls. */
+.fx-desktop .fx-library-heading{padding:16px 0 26px;align-items:center}
+.fx-library-eyebrow{display:block;font-size:10px;letter-spacing:1.8px;font-weight:700;color:var(--mut);margin-bottom:12px}
+.fx-desktop .fx-library-heading b{display:block;font-size:30px;letter-spacing:-.8px;line-height:1.2}
+.fx-desktop .fx-library-heading small{margin-top:9px;font-size:13px;line-height:1.5}
+.fx-desktop [data-v=fx] .sticky-bar{padding:12px 0 9px}
+.fx-desktop [data-v=fx] .search{min-height:46px;border-radius:10px;border-color:var(--ed-border);background:var(--ed-surface);font-size:14px}
+.fx-desktop .fx-library-tabs{gap:7px;padding-top:12px;padding-bottom:10px}
+.fx-desktop .fx-library-tabs .chip{min-height:34px;border-radius:8px;padding-inline:13px;font-size:12px}
+.fx-desktop .fx-library-tabs .chip.on{background:var(--ed-selected);border-color:var(--ed-light);color:var(--text)}
+.fx-desktop .fxlist>.grp-h{padding:15px 0;margin:0;font-size:15px;gap:10px}
+.fx-desktop .fxlist>.grp-h small{padding:3px 8px;border-radius:6px;background:var(--ed-surface);color:var(--mut);font-size:11px;font-variant-numeric:tabular-nums}
+.fx-desktop .fxlist>.cards{grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:16px}
+.fx-desktop .fx-library-tile>.card{border-radius:12px;overflow:hidden;border:1px solid var(--ed-border);background:var(--ed-surface);transition:border-color .15s,box-shadow .15s;text-align:left}
+.fx-desktop .fx-library-tile>.card .c-body{padding:12px;min-height:78px}
+.fx-desktop .fx-library-tile>.card .c-body b{font-size:13px;line-height:1.4}
+.fx-desktop .fx-library-tile>.card .c-body small{line-height:1.5;margin-top:5px;color:var(--mut)}
+.fx-desktop .fx-library-tile>.card:hover{border-color:var(--ed-light);box-shadow:0 5px 18px #0003}
+.fx-desktop .fx-library-tile>.fx-collection-more{bottom:auto;top:9px;left:9px;background:#101820e8}
+.fx-desktop .fx-library-tile .thumb .dur{font-variant-numeric:tabular-nums;background:#101820df;border-radius:5px;padding:3px 6px}
+.fx-desktop #app.ready>.tabbar .tab{border-radius:9px;min-height:44px}
+.fx-desktop #app.ready>.tabbar .tab.on{box-shadow:inset 3px 0 var(--ed-light)}
+.fx-desktop :is(.fx-library-tile>.card,.fx-library-tabs .chip,.fx-update-button):focus-visible{outline:2px solid var(--ed-light);outline-offset:3px}
+@media(max-width:900px){.fx-desktop .fx-library-heading b{font-size:25px}.fx-desktop .fxlist>.cards{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}}
+@media(max-width:600px){.fx-desktop .fx-library-heading{align-items:flex-start;flex-wrap:wrap}.fx-desktop .fx-library-heading b{font-size:23px}.fx-desktop .fx-library-heading .btn{margin-top:4px}}
+@media(prefers-reduced-motion:reduce){.fx-desktop .fx-library-tile>.card{transition:none}}
 .fx-precise-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fx-precise-grid .inp{width:100%;min-width:0}.fx-guides-label{display:flex;gap:8px;align-items:center;padding:15px 0;font-size:13px}.fx-action-history{padding-left:20px}.fx-action-history li{padding:8px 0;font-size:13px}.fx-action-history small{float:right;color:var(--mut);margin-left:10px}
 .fx-composition-guides{position:absolute;inset:0;pointer-events:none;z-index:4;background:linear-gradient(to right,transparent 33.2%,#ffffff59 33.3%,transparent 33.5%,transparent 66.5%,#ffffff59 66.6%,transparent 66.8%),linear-gradient(to bottom,transparent 33.2%,#ffffff59 33.3%,transparent 33.5%,transparent 66.5%,#ffffff59 66.6%,transparent 66.8%);border:1px solid #ffffff4d}
 .fx-composition-guides::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,transparent 49.9%,#ffc34899 50%,transparent 50.1%),linear-gradient(to bottom,transparent 49.9%,#ffc34899 50%,transparent 50.1%)}
